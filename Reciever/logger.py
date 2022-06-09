@@ -21,7 +21,7 @@ class Logger:
         my_mutex=threading.Lock()
         with StreamWriter(self._fileName, True) as self._sw:
 
-                self._sw.WriteLine("\n{0:s} Writer id: {1:s} sent:   {2:s} Value:  {3:s}".format(dateTime, writerId, code, value))
+                self._sw.writelines("\n{0:s} Writer id: {1:s} sent:   {2:s} Value:  {3:s}".format(dateTime, writerId, code, value))
                 self._sw.Close()
     
 
@@ -30,12 +30,12 @@ class Logger:
     def LoggStoredCodes(self, code, value, dateTime):
         with StreamWriter(self._fileName, True) as self._sw:
 
-            self._sw.WriteLine("\n{0:s} DATA STORED: {1:s}, Value:  {2:s}".format(dateTime, code, value))
+            self._sw.writelines("\n{0:s} DATA STORED: {1:s}, Value:  {2:s}".format(dateTime, code, value))
             self._sw.Close()
 
 
     def LoggActivity(self, activity):
         with StreamWriter(self._fileName, True) as self._sw:
 
-            self._sw.WriteLine("\n"+activity+" "+DateTime.Now)
+            self._sw.writelines("\n"+activity+" "+DateTime.Now)
             self._sw.Close()
