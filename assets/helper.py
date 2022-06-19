@@ -1,5 +1,5 @@
-from dataclasses import dataclass
 import enum
+from dataclasses import dataclass
 
 
 class CODE(enum.Enum):
@@ -15,5 +15,10 @@ class CODE(enum.Enum):
 
 @dataclass
 class ReceiverProperty:
-    code: int
-    value: int
+    Code: CODE
+    ReceiverValue: int
+
+    def __init__(self, code, receiverValue):
+        self.Code = code
+        self.ReceiverValue = receiverValue
+
