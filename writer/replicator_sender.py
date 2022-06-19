@@ -1,18 +1,18 @@
-from Reciever.Receiver import Send, ReplicatorReceiver
-from assets.helper import ReceiverProperty, CODE
-from multiprocessing.connection import wait
+
 import queue
 import threading
 from time import sleep
 from tracemalloc import start
+from Receiver.Receiver import ReplicatorReceiver
+from assets.helper import CODE, ReceiverProperty
 
 
 class ReplicatorSender:
     def __init__(self):
-        self.thread = None
+        self.thread = threading.Thread(target=self.repl_sender_send)
         self.queue = []
-        self.replicatorReceiver = ReplicatorReceiver()
-        threading.Thread = start()
+        self.replicatorReceiver = ReplicatorReceiver
+        start()
 
     def repl_sender_receive(self, code, value):
         # potrebna je struktura koja bi sacuvala vrednosti CODE i VALUE
@@ -21,16 +21,14 @@ class ReplicatorSender:
         print(f"Primljeno od writera, KOD = {CODE(code)}, VREDNOST = {value}")
         print("Trenutno stanje QUEUE-a:")
         for rp in self.queue:
-            print(f"Code[{CODE(rp.code)}] = {rp.value}")
+            print(f"Code[{CODE(rp.Code)}] = {rp.ReceiverValue}")
 
     def repl_sender_send(self):
-        receiverProp = queue[ReceiverProperty]
-        mutex = threading.Lock()
-        while (True):
-            while (receiverProp <= 0):
-                self = wait()
+        threading.Lock()
+        while True:
+            while len(self.queue) <= 0:
+                self.thread.join()
 
-            rp = receiverProp
-            self.queue.pop(rp)
-            self.replicatorReceiver = Send(CODE(rp.code), rp.value)
-            threading.Thread = sleep(1000)
+            rp: ReceiverProperty = self.queue.pop()
+            self.replicatorReceiver.Send(str(CODE(rp.Code)), rp.ReceiverValue)
+            sleep(1000)
