@@ -1,70 +1,93 @@
-from array import array
-import enum
-from collections import namedtuple
-import string
-import struct
-from collections import namedtuple
-import threading
+from assets.helper import CODE, ReceiverProperty
+from threading import Thread
 from time import sleep
-from typing import Collection
-from Logger import Logger
+from tracemalloc import start
 from Reader import Reader
-from assets.helper import CODE
 
-#CODE = Enum["CODE_ANALOG", "CODE_DIGITAL", "CODE_CUSTOM", "CODE_LIMITSET", "CODE_SINGLENODE", "CODE_MULTIPLENODE", "CODE_CONSUMER", "CODE_SOURCE"]
 
-ReceiverProperty = struct(Code = CODE, ReceiverValue = int)
+class HistoricalCollection:
+    properties: ReceiverProperty = []
 
-HistoricalCollection = struct(properties = ReceiverProperty[array])
 
-CollectionDescription = struct( id = int, DataSet = int, Collection = HistoricalCollection,  properties = ReceiverProperty[100])
+class CollectionDescription:
+    Id: int
+    DataSet: int
+
+    def __init__(self, id, dataSet):
+        self.Id = id
+        self.DataSet = dataSet
+        self.Collection = HistoricalCollection
+        self.Collection.properties = [100]
+
 
 class ReplicatorReceiver:
-    reader1 = Reader
-    reader2 = Reader
-    reader3 = Reader
-    reader4 = Reader
+    def __init__(self):
+        self.collectionDescription1 = CollectionDescription(1, 1)
+        self.collectionDescription2 = CollectionDescription(2, 2)
+        self.collectionDescription3 = CollectionDescription(3, 3)
+        self.collectionDescription4 = CollectionDescription(4, 4)
 
-    collectionDescription1 = CollectionDescription(1,1)
-    collectionDescription2 = CollectionDescription(2,2)
-    collectionDescription3 = CollectionDescription(3,3)
-    collectionDescription4 = CollectionDescription(4,4)
+        self.collection1Count = 0
+        self.collection2Count = 0
+        self.collection3Count = 0
+        self.collection4Count = 0
 
-    collection1Count = 0
-    collection2Count = 0
-    collection3Count = 0
-    collection4Count = 0
+        self.reader1 = Reader(r"C:\Users\Pantex\PycharmProjects\pythonProject\BazaPodataka\DataSet\database1.txt")
+        self.reader2 = Reader(r"C:\Users\Pantex\PycharmProjects\pythonProject\BazaPodataka\DataSet\database2.txt")
+        self.reader3 = Reader(r"C:\Users\Pantex\PycharmProjects\pythonProject\BazaPodataka\DataSet\database3.txt")
+        self.reader4 = Reader(r"C:\Users\Pantex\PycharmProjects\pythonProject\BazaPodataka\DataSet\database4.txt")
 
-    thread = threading.Thread
+        self.thread = Thread.__new__(self.ReadersRead)
+        start()
 
-def Send(self, code, value):
-    c = CODE
-    self.code = string(c)
-    rp = ReceiverProperty(c, value)
+    def Send(self, code: str, value: int):
+        c: CODE = CODE[code]
+        rp: ReceiverProperty = ReceiverProperty(c, value)
 
-    if(c == CODE.CODE_ANALOG or c == CODE.CODE_DIGITAL):
-      # ReplicatorReceiver.collectionDescription1
-       ReplicatorReceiver.collection1Count += 1
+        if c == CODE.CODE_ANALOG or c == CODE.CODE_DIGITAL:
 
-    elif(c == CODE.CODE_CUSTOM or c == CODE.CODE_LIMITSET):
-        ReplicatorReceiver.collection2Count += 1
-    elif(c == CODE.CODE_SINGLENODE or c == CODE.CODE_MULTIPLENODE):
-        ReplicatorReceiver.collection3Count += 1
-    elif(c == CODE.CODE_CONSUMER or c == CODE.CODE_SOURCE):
-        ReplicatorReceiver.collection4Count += 1
+            self.collectionDescription1.Collection.properties[self.collection1Count] = rp
+            self.collection1Count += 1
+        elif c == CODE.CODE_CUSTOM or c == CODE.CODE_LIMITSET:
+            self.collectionDescription2.Collection.properties[self.collection2Count] = rp
+            self.collection2Count += 1
+        elif c == CODE.CODE_SINGLENODE or c == CODE.CODE_MULTIPLENODE:
+            self.collectionDescription3.Collection.properties[self.collection3Count] = rp
+            self.collection3Count += 1
+        elif c == CODE.CODE_CONSUMER or c == CODE.CODE_SOURCE:
+            self.collectionDescription4.Collection.properties[self.collection4Count] = rp
+            self.collection4Count += 1
 
-def ReadersRead(self):
-    while(True):
-        if(ReplicatorReceiver.collection1Count > 0):
-            ReplicatorReceiver.collection1Count -=1
+    @staticmethod
+    def RemoveFirst(param: [ReceiverProperty]):
+        l: list[ReceiverProperty] = param
+        del l[0]
+        return l
 
-        if(ReplicatorReceiver.collection2Count > 0):
-            ReplicatorReceiver.collection2Count -=1
-        
-        if(ReplicatorReceiver.collection3Count > 0):
-            ReplicatorReceiver.collection3Count -=1
-        
-        if(ReplicatorReceiver.collection4Count > 0):
-            ReplicatorReceiver.collection4Count -=1
+    def ReadersRead(self):
+        while True:
+            if self.collection1Count > 0:
+                self.reader1.WriteInFile(self.collectionDescription1.Collection.properties[0])
+                self.collectionDescription1.Collection.properties = self.RemoveFirst(
+                    self.collectionDescription1.Collection.properties)
+                self.collection1Count -= 1
 
-        threading.Thread = sleep(1000)
+            if self.collection2Count > 0:
+                self.reader2.WriteInFile(self.collectionDescription2.Collection.properties[0])
+                self.collectionDescription2.Collection.properties = self.RemoveFirst(
+                    self.collectionDescription2.Collection.properties)
+                self.collection2Count -= 1
+
+            if self.collection3Count > 0:
+                self.reader3.WriteInFile(self.collectionDescription3.Collection.properties[0])
+                self.collectionDescription3.Collection.properties = self.RemoveFirst(
+                    self.collectionDescription3.Collection.properties)
+                self.collection3Count -= 1
+
+            if self.collection4Count > 0:
+                self.reader4.WriteInFile(self.collectionDescription4.Collection.properties[0])
+                self.collectionDescription4.Collection.properties = self.RemoveFirst(
+                    self.collectionDescription4.Collection.properties)
+                self.collection4Count -= 1
+
+            sleep(1000)
