@@ -1,58 +1,45 @@
-from array import array
-import code
-import math
-import struct
-from datetime import date, datetime
+from datetime import datetime
+from assets.helper import ReceiverProperty, CODE
+from ReplicatorReceiver.FileItem import FileItem
+from ReplicatorReceiver.Logger import Logger
 
-from pymysql import NULL
-from FileItem import FileItem
-from Logger import Logger
-import string
-import FileItem
-from Receiver import ReceiverProperty
-from assets.helper import CODE
-from assets.helper import ReceiverProperty
 from codecs import StreamReader, StreamWriter
 
-CollectionFileItems = struct(fileItems = FileItem[array])
+
+class CollectionFileItems:
+    fileItems = [FileItem]
+
 
 class Reader:
-    fileName = string
-    l = Logger
     def __init__(self, fileName):
         self.fileName = fileName
-        l = Logger.__new__("@BazaPodataka\readerLogs")
+        self.l: Logger = Logger(r"C:\Users\Pantex\PycharmProjects\pythonProject\BazaPodataka\PracenjeAktivnosti")
 
-    def WriteInFile(self, receiverProperty = ReceiverProperty):
-        str = string
-        niz = string[array]
-        difference = int
-
-        if(receiverProperty.Code == CODE.CODE_DIGITAL):
-            with StreamWriter(self.fileName, True) as self.sw:
-                 self.sw.writelines()#
-                 self.l.LoggStoredCodes(receiverProperty.code, receiverProperty.value, datetime.now)
-                 return
+    def WriteInFile(self, receiverProperty: ReceiverProperty):
+        if receiverProperty.Code == CODE.CODE_DIGITAL:
+            with StreamWriter(self.fileName, str(True)) as self.sw:
+                self.sw.writelines(
+                    str(datetime.now) + ";" + str(receiverProperty.Code) + ";" + str(receiverProperty.ReceiverValue))
+                self.l.LoggStoredCodes(receiverProperty.Code, receiverProperty.ReceiverValue, datetime.now)
+                return
 
         with StreamReader(self.fileName) as self.sr:
-            while(True):
-                str = self.sr.readline()
-                if(str == "<EOF>" or str == NULL):
+            while True:
+                st = self.sr.readline()
+                if st == "<EOF>" or st is None:
                     break
                 else:
-                    niz = str.split(';')
-                    pom1 = datetime
-                    pom1 = datetime.strptime(niz[0])
-                    pom2 = CODE
-                    #CODE.
-                    pom3 = int
+                    niz = st.split(";")
+                    pom1 = datetime.strptime(niz[0], "%d/%m/%y %H:%M:%S.%f")
+                    pom2 = CODE[niz[1]]
                     pom3 = int(niz[2])
-                    it = FileItem(datetime = pom1, rp = ReceiverProperty(code = pom2, value = pom3)) #
-                    if(it.rp == receiverProperty.code):#
-                        difference = abs(it.rp - receiverProperty.value) #
-                        if(difference < it.rp * 0.02):
+                    it: FileItem = FileItem(dateTime=pom1, rp=ReceiverProperty(code=pom2, receiverValue=pom3))
+                    if it.rp.Code == receiverProperty.Code:
+                        difference = abs(it.rp.ReceiverValue - receiverProperty.ReceiverValue)
+                        if difference < it.rp.ReceiverValue * 0.02:
                             return
-        
-        with StreamWriter(self.fileName, True) as self.sw:
-            self.sw.writelines() #
-            self.l.LoggStoredCodes(receiverProperty.code, receiverProperty.value, datetime.now)
+
+        with StreamWriter(self.fileName, str(True)) as self.sw:
+            self.sw.writelines(
+                str(datetime.now) + ";" + str(receiverProperty.Code) + ";" + str(receiverProperty.ReceiverValue))
+            self.l.LoggStoredCodes(receiverProperty.Code, receiverProperty.ReceiverValue, datetime.now)
