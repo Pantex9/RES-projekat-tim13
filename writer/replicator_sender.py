@@ -3,7 +3,7 @@ import queue
 import threading
 from time import sleep
 from tracemalloc import start
-from Receiver.Receiver import ReplicatorReceiver
+from Reciever.Receiver import ReplicatorReceiver
 from assets.helper import CODE, ReceiverProperty
 
 

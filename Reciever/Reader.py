@@ -1,7 +1,7 @@
 from datetime import datetime
 from assets.helper import ReceiverProperty, CODE
-from ReplicatorReceiver.FileItem import FileItem
-from ReplicatorReceiver.Logger import Logger
+from Reciever.FileItem import FileItem
+from Reciever.logger import Logger
 
 from codecs import StreamReader, StreamWriter
 
