@@ -1,3 +1,4 @@
+from datetime import datetime
 import sys
 import threading
 import time
@@ -21,7 +22,7 @@ class NevalidanUnos(Exception):
 def main():
     writer = Writer()
     threads = []
-    l: Logger = Logger(r"C:\Users\Pantex\Documents\GitHub\RES-projekat-tim13\BazaPodataka\LOG\UILogs.txt")
+    l: Logger = Logger(r"C:\Users\Pantex\PycharmProjects\pythonProject\BazaPodataka\LOG\UILogs.txt")
     data = ReplicatorReceiver()
     ret: int
 
@@ -36,13 +37,15 @@ def main():
         if ret == 1:
             threads.append(threading.Thread(target=writer.writer_send_data))
             threads[len(threads) - 1].start()
+            dateTime = datetime.now().strftime("%d-%m-%y %H:%M:%S")
             print(f"Upaljeno {len(threads)}  writera")
-            l.LoggActivity(f"Upaljen novi writer.Trenutno writera -> {len(threads)}  ")
+            l.LoggActivity(f"Upaljen novi writer.Trenutno writera -> {len(threads)}  ", dateTime)
         elif ret == 2:
             threads[len(threads) - 1].join()
             threads.pop(len(threads) - 1)
+            dateTime = datetime.now().strftime("%d-%m-%y %H:%M:%S")
             print(f"Upaljeno {len(threads)} writera")
-            l.LoggActivity(f"Ugasen jedan writer.Trenutno writera -> {len(threads)} ")
+            l.LoggActivity(f"Ugasen jedan writer.Trenutno writera -> {len(threads)}  ", dateTime)
         elif ret == 3:
             br = iscitavanje_po_vr_intervalu()
             code1 = br[0]
@@ -54,11 +57,13 @@ def main():
             data.send_to_read2(code2)
         elif ret == 5:
             continue
+        elif ret == 6:
+            break
         else:
             print("Nepostojeca komanda")
 
     for t in threads:
-        t.join()
+         t.join()
 
     print("Gasenje")
     sys.exit()
@@ -92,37 +97,13 @@ def Meni():
         print("1.Upali writera")
         print("2.Ugasi writera")
         print("3.Citanje vrednosti readera po vremenskom intervalu za trazeni kod")
-        # print("3.Odustani")
-        print("4.Ugasi klijenta")
+        print("4.Dobavljanje poslednje vrenosti izabranog koda")
+        print("5.Odustani")
+        print("6.Ugasi klijenta")
         br = input()
         try:
             br = int(br)
-            if br <= 0 or br > 4:
-                raise NevalidanUnos("Pogresan unos!")
-
-            return br
-        except NevalidanUnos as e:
-            print(e)
-            return None
-        except Exception:
-            print("Unesite broj.")
-            return None
-
-
-if __name__ == "__main__":
-    main()
-
-
-def Meni():
-    while True:
-        print("1.Upali writera")
-        print("2.Ugasi writera")
-        print("3.Odustani")
-        print("4.Ugasi klijenta")
-        br = input()
-        try:
-            br = int(br)
-            if br <= 0 or br > 4:
+            if br <= 0 or br > 6:
                 raise NevalidanUnos("Pogresan unos!")
 
             return br

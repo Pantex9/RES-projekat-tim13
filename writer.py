@@ -24,4 +24,4 @@ class Writer:
             self.logger.LoggSentCodes(CODE(self.code), self.value, datetime.now().strftime("%d-%m-%y %H:%M:%S"),
                                       threading.current_thread().ident)
             print(f"Poslao THREAD ID-> {threading.current_thread().ident} : {CODE(self.code)} , VALUE:{self.value}")
-            sleep(5)
+            sleep(2)
