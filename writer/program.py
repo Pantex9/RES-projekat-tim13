@@ -1,15 +1,24 @@
 import sys
 import threading
+import time
 from writer import Writer
-from Reciever.logger import Logger
-from replicator_sender import ReplicatorSender
+from ReplicatorReceiver.Logger import Logger
+
+
+class NevalidanUnos(Exception):
+    def __init__(self, message=None):
+        self.message = message
+
+    def __str__(self):
+        if self.message is None:
+            return "Nevalidan unos."
+        return self.message
 
 
 def main():
-    writer = Writer
+    writer = Writer()
     threads = []
     l: Logger = Logger(r"C:\Users\Pantex\PycharmProjects\pythonProject\BazaPodataka\LOG\UILogs.txt")
-    send: ReplicatorSender = ReplicatorSender()
     ret: int
 
     while True:
@@ -17,19 +26,18 @@ def main():
         if len(threads) == 0:
             print("Nema upaljenih writera.")
         input()
+
         ret = Meni()
         if ret == 1:
-            #start_new_thread(writer(send, l).writer_send_data(), ())
-            thread = threading.Thread(target=writer(send, l).writer_send_data())
-            thread.start()
-            #new_thread = Thread()
-            #threads.append(new_thread)
-           # threads(threads.count - 1) = start()
+            threads.append(threading.Thread(target=writer.writer_send_data))
+            threads[len(threads) - 1].start()
             print(f"Upaljeno {len(threads)}  writera")
-            print(f"Upaljen novi writer.Trenutno writera {len(threads)} ")
+            l.LoggActivity(f"Upaljen novi writer.Trenutno writera -> {len(threads)}  ")
         elif ret == 2:
+            threads[len(threads) - 1].join()
+            threads.pop(len(threads) - 1)
             print(f"Upaljeno {len(threads)} writera")
-            print(f"Ugasen jedan writer.Trenutno writera -> {len(threads)}")
+            l.LoggActivity(f"Ugasen jedan writer.Trenutno writera -> {len(threads)} ")
         elif ret == 3:
             continue
         elif ret == 4:
@@ -45,17 +53,24 @@ def main():
 
 
 def Meni():
-    br: int
     while True:
         print("1.Upali writera")
         print("2.Ugasi writera")
-        print("3. Odustani")
+        print("3.Odustani")
         print("4.Ugasi klijenta")
+        br = input()
         try:
-            br = int(input())
+            br = int(br)
+            if br <= 0 or br > 4:
+                raise NevalidanUnos("Pogresan unos!")
+
             return br
-        except:
-            print("Pogresan unos!")
+        except NevalidanUnos as e:
+            print(e)
+            return None
+        except Exception:
+            print("Unesite broj.")
+            return None
 
 
 if __name__ == "__main__":
