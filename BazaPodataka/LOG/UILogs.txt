@@ -1,5 +1,5 @@
 
- Upaljen novi writer.Trenutno writera -> 1   ; 22-06-22 17:07:37
- Upaljen novi writer.Trenutno writera -> 2   ; 22-06-22 17:07:37
- Upaljen novi writer.Trenutno writera -> 3   ; 22-06-22 17:07:37
- Upaljen novi writer.Trenutno writera -> 4   ; 22-06-22 17:07:37
+ Upaljen novi writer.Trenutno writera -> 1   ; 23-06-22 00:59:51
+ Upaljen novi writer.Trenutno writera -> 2   ; 23-06-22 00:59:53
+ Upaljen novi writer.Trenutno writera -> 3   ; 23-06-22 00:59:55
+ Upaljen novi writer.Trenutno writera -> 4   ; 23-06-22 00:59:57

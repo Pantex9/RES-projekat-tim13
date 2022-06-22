@@ -35,9 +35,9 @@ class Logger:
         except Exception as e:
             print(e)
 
-    def LoggActivity(self, activity: str):
+    def LoggActivity(self, activity: str, dateTime):
         try:
-            self.write_in_file(self.fileName, f"\n {activity} ; {self.dateTime}")
+            self.write_in_file(self.fileName, f"\n {activity} ; {dateTime}")
             if activity == "":
                 raise Exception("Greska pri upisu u fajl. Niste uneli nista")
         except Exception as e:

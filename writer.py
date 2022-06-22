@@ -9,6 +9,7 @@ from assets.helper import CODE
 
 
 class Writer:
+    global stop_threads
 
     def __init__(self):
         self.code = None
@@ -24,4 +25,6 @@ class Writer:
             self.logger.LoggSentCodes(CODE(self.code), self.value, datetime.now().strftime("%d-%m-%y %H:%M:%S"),
                                       threading.current_thread().ident)
             print(f"Poslao THREAD ID-> {threading.current_thread().ident} : {CODE(self.code)} , VALUE:{self.value}")
+            if self.stop_threads:
+                break
             sleep(2)

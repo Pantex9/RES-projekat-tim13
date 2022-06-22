@@ -2,8 +2,9 @@ from datetime import datetime
 import sys
 import threading
 import time
-
+import os
 from assets.helper import CODE
+from replicator_sender import ReplicatorSender
 from writer import Writer
 from ReplicatorReceiver.Logger import Logger
 from ReplicatorReceiver.Receiver import ReplicatorReceiver
@@ -22,12 +23,11 @@ class NevalidanUnos(Exception):
 def main():
     writer = Writer()
     threads = []
-    l: Logger = Logger(r"C:\Users\Pantex\PycharmProjects\pythonProject\BazaPodataka\LOG\UILogs.txt")
+    l: Logger = Logger(r"C:\Users\Pantex\Documents\GitHub\RES-projekat-tim13\BazaPodataka\LOG\UILogs.txt")
     data = ReplicatorReceiver()
     ret: int
 
     while True:
-        # print(CODE.CODE_CUSTOM.name)
         print("Pritisni dugme za Meni")
         if len(threads) == 0:
             print("Nema upaljenih writera.")
@@ -35,17 +35,19 @@ def main():
 
         ret = Meni()
         if ret == 1:
+            writer.stop_threads = False
             threads.append(threading.Thread(target=writer.writer_send_data))
             threads[len(threads) - 1].start()
             dateTime = datetime.now().strftime("%d-%m-%y %H:%M:%S")
             print(f"Upaljeno {len(threads)}  writera")
             l.LoggActivity(f"Upaljen novi writer.Trenutno writera -> {len(threads)}  ", dateTime)
         elif ret == 2:
+            writer.stop_threads = True
+            time.sleep(1)
             threads[len(threads) - 1].join()
-            threads.pop(len(threads) - 1)
+            threads.clear()
             dateTime = datetime.now().strftime("%d-%m-%y %H:%M:%S")
-            print(f"Upaljeno {len(threads)} writera")
-            l.LoggActivity(f"Ugasen jedan writer.Trenutno writera -> {len(threads)}  ", dateTime)
+            l.LoggActivity(f"Ugaseni writeri.", dateTime)
         elif ret == 3:
             br = iscitavanje_po_vr_intervalu()
             code1 = br[0]
@@ -62,11 +64,9 @@ def main():
         else:
             print("Nepostojeca komanda")
 
-    for t in threads:
-         t.join()
-
     print("Gasenje")
     sys.exit()
+
 
 
 def iscitavanje_poslednje_vrednosti():
@@ -79,7 +79,6 @@ def iscitavanje_poslednje_vrednosti():
 
 def iscitavanje_po_vr_intervalu():
     while True:
-        # print(CODE[CODE_ANALOG])
         print("CODE_ANALOG, CODE_DIGITAL, CODE_CUSTOM,"
               " CODE_LIMITSET, CODE_SINGLENODE, CODE_MULTIPLENODE, CODE_CONSUMER, CODE_SOURCE")
         print("Unesite neku od vrednosti iznad koje zelite da iscitate:")
@@ -95,7 +94,7 @@ def iscitavanje_po_vr_intervalu():
 def Meni():
     while True:
         print("1.Upali writera")
-        print("2.Ugasi writera")
+        print("2.Ugasi writere")
         print("3.Citanje vrednosti readera po vremenskom intervalu za trazeni kod")
         print("4.Dobavljanje poslednje vrenosti izabranog koda")
         print("5.Odustani")
