@@ -22,3 +22,9 @@ class ReceiverProperty:
         self.Code = code
         self.ReceiverValue = receiverValue
 
+
+class DeltaCD:
+    def __init__(self, id):
+        self.id = id
+        self.add = []
+        self.update = []
