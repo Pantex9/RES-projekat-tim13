@@ -29,13 +29,37 @@ class ReplicatorReceiver:
         self.delta_cd3 = DeltaCD(3)
         self.delta_cd4 = DeltaCD(4)
 
-        self.reader1 = Reader("C:\\Users\\Pantex\\PycharmProjects\\pythonProject\\BazaPodataka\\DataSet\\database1.txt")
-        self.reader2 = Reader("C:\\Users\\Pantex\\PycharmProjects\\pythonProject\\BazaPodataka\\DataSet\\database2.txt")
-        self.reader3 = Reader("C:\\Users\\Pantex\\PycharmProjects\\pythonProject\\BazaPodataka\\DataSet\\database3.txt")
-        self.reader4 = Reader("C:\\Users\\Pantex\\PycharmProjects\\pythonProject\\BazaPodataka\\DataSet\\database4.txt")
+        self.reader1 = Reader(
+            "C:\\Users\\Pantex\\Documents\\GitHub\\RES-projekat-tim13\\BazaPodataka\\DataSet\\database1.txt")
+        self.reader2 = Reader(
+            "C:\\Users\\Pantex\\Documents\\GitHub\\RES-projekat-tim13\\BazaPodataka\\DataSet\\database2.txt")
+        self.reader3 = Reader(
+            "C:\\Users\\Pantex\\Documents\\GitHub\\RES-projekat-tim13\\BazaPodataka\\DataSet\\database3.txt")
+        self.reader4 = Reader(
+            "C:\\Users\\Pantex\\Documents\\GitHub\\RES-projekat-tim13\\BazaPodataka\\DataSet\\database4.txt")
 
         self.thread = threading.Thread(target=self.ReadersRead)
         self.thread.start()
+
+    def send_to_read(self, code, fromDate, toDate):
+        if CODE[code] == CODE.CODE_ANALOG or CODE[code] == CODE.CODE_DIGITAL:
+            self.reader1.read_from_file(code, fromDate, toDate)
+        if CODE[code] == CODE.CODE_CUSTOM or CODE[code] == CODE.CODE_LIMITSET:
+            self.reader2.read_from_file(code, fromDate, toDate)
+        if CODE[code] == CODE.CODE_SINGLENODE or CODE[code] == CODE.CODE_MULTIPLENODE:
+            self.reader3.read_from_file(code, fromDate, toDate)
+        if CODE[code] == CODE.CODE_CONSUMER or CODE[code] == CODE.CODE_SOURCE:
+            self.reader4.read_from_file(code, fromDate, toDate)
+
+    def send_to_read2(self, code):
+        if CODE[code] == CODE.CODE_ANALOG or CODE[code] == CODE.CODE_DIGITAL:
+            self.reader1.read_from_file2(code)
+        if CODE[code] == CODE.CODE_CUSTOM or CODE[code] == CODE.CODE_LIMITSET:
+            self.reader2.read_from_file2(code)
+        if CODE[code] == CODE.CODE_SINGLENODE or CODE[code] == CODE.CODE_MULTIPLENODE:
+            self.reader3.read_from_file2(code)
+        if CODE[code] == CODE.CODE_CONSUMER or CODE[code] == CODE.CODE_SOURCE:
+            self.reader4.read_from_file2(code)
 
     def Send(self, code: CODE, value):
         c = code
@@ -44,13 +68,13 @@ class ReplicatorReceiver:
         if c == CODE.CODE_ANALOG or c == CODE.CODE_DIGITAL:
             self.collectionDescription1.Collection.properties.append(rp)
 
-        elif c == CODE.CODE_CUSTOM or c == CODE.CODE_LIMITSET:
+        if c == CODE.CODE_CUSTOM or c == CODE.CODE_LIMITSET:
             self.collectionDescription2.Collection.properties.append(rp)
 
-        elif c == CODE.CODE_SINGLENODE or c == CODE.CODE_MULTIPLENODE:
+        if c == CODE.CODE_SINGLENODE or c == CODE.CODE_MULTIPLENODE:
             self.collectionDescription3.Collection.properties.append(rp)
 
-        elif c == CODE.CODE_CONSUMER or c == CODE.CODE_SOURCE:
+        if c == CODE.CODE_CONSUMER or c == CODE.CODE_SOURCE:
             self.collectionDescription4.Collection.properties.append(rp)
 
     def ReadersRead(self):
@@ -141,6 +165,8 @@ class ReplicatorReceiver:
 
     # Vraca 2% od vrednosti val
     def two_percent(self, val):
+        if val == 0:
+            raise ValueError("Can not divide by zero")
         return val * 2 / 100
 
     # Vraca True ako je razlika nove i stare vrednosti VECA od 2%

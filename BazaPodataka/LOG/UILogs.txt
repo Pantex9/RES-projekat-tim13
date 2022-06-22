@@ -1,3 +1,5 @@
 
-2022-06-20 00:30:34.926235 Writer id: 12392 sent:   CODE.CODE_SINGLENODE Value:  640
-2022-06-20 00:36:13.700509 Writer id: 10068 sent:   CODE.CODE_LIMITSET Value:  685
+ Upaljen novi writer.Trenutno writera -> 1   ; 22-06-22 17:07:37
+ Upaljen novi writer.Trenutno writera -> 2   ; 22-06-22 17:07:37
+ Upaljen novi writer.Trenutno writera -> 3   ; 22-06-22 17:07:37
+ Upaljen novi writer.Trenutno writera -> 4   ; 22-06-22 17:07:37
