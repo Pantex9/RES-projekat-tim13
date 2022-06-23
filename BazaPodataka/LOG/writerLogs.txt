@@ -158,3 +158,11 @@
 23-06-22 01:01:35 Writer id: 10624 sent:   CODE_CUSTOM Value:  679
 23-06-22 01:01:36 Writer id: 3472 sent:   CODE_CUSTOM Value:  877
 23-06-22 01:01:36 Writer id: 8600 sent:   CODE_ANALOG Value:  553
+23-06-22 09:50:59 Writer id: 24284 sent:   CODE_DIGITAL Value:  160
+23-06-22 09:51:01 Writer id: 24284 sent:   CODE_MULTIPLENODE Value:  958
+23-06-22 09:51:03 Writer id: 17548 sent:   CODE_CONSUMER Value:  328
+23-06-22 09:51:03 Writer id: 24284 sent:   CODE_SINGLENODE Value:  133
+23-06-22 09:51:05 Writer id: 17548 sent:   CODE_ANALOG Value:  493
+23-06-22 09:51:05 Writer id: 24284 sent:   CODE_LIMITSET Value:  367
+23-06-22 09:51:07 Writer id: 17548 sent:   CODE_CONSUMER Value:  571
+23-06-22 09:51:07 Writer id: 24284 sent:   CODE_MULTIPLENODE Value:  700

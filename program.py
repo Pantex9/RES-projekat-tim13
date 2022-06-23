@@ -23,11 +23,12 @@ class NevalidanUnos(Exception):
 def main():
     writer = Writer()
     threads = []
-    l: Logger = Logger(r"C:\Users\Pantex\Documents\GitHub\RES-projekat-tim13\BazaPodataka\LOG\UILogs.txt")
+    l: Logger = Logger(r"C:\Users\Pantex\PycharmProjects\pythonProject\BazaPodataka\LOG\UILogs.txt")
     data = ReplicatorReceiver()
     ret: int
 
     while True:
+        # print(CODE.CODE_CUSTOM.name)
         print("Pritisni dugme za Meni")
         if len(threads) == 0:
             print("Nema upaljenih writera.")
@@ -50,13 +51,15 @@ def main():
             l.LoggActivity(f"Ugaseni writeri.", dateTime)
         elif ret == 3:
             br = iscitavanje_po_vr_intervalu()
-            code1 = br[0]
-            odDatuma1 = br[1]
-            doDatuma1 = br[2]
-            data.send_to_read(code1, odDatuma1, doDatuma1)
+            if br is not None:
+                code1 = br[0]
+                odDatuma1 = br[1]
+                doDatuma1 = br[2]
+                data.send_to_read(code1, odDatuma1, doDatuma1)
         elif ret == 4:
             code2 = iscitavanje_poslednje_vrednosti()
-            data.send_to_read2(code2)
+            if code2 is not None:
+                data.send_to_read2(code2)
         elif ret == 5:
             continue
         elif ret == 6:
@@ -74,8 +77,15 @@ def iscitavanje_poslednje_vrednosti():
           "CODE_LIMITSET, CODE_SINGLENODE, CODE_MULTIPLENODE, CODE_CONSUMER, CODE_SOURCE")
     print("Unesite neku od vrednosti iznad koje zelite da iscitate:")
     code = input()
-    return code
-
+    try:
+        if code != "CODE_ANALOG" and code !="CODE_DIGITAL" and code !="CODE_CUS" \
+      "TOM" and code !="CODE_SINGLENODE" and code !="CODE_MULTIPLENO" \
+        "DE" and code != "CODE_CONSUMER" and code !="CODE_SOURCE" and code !="CODE_LIMITSET":
+            raise NevalidanUnos("Pogresan unos!Unesite neke od navedenih kodova")
+        return code
+    except NevalidanUnos as e:
+        print(e)
+        return None
 
 def iscitavanje_po_vr_intervalu():
     while True:
@@ -83,12 +93,18 @@ def iscitavanje_po_vr_intervalu():
               " CODE_LIMITSET, CODE_SINGLENODE, CODE_MULTIPLENODE, CODE_CONSUMER, CODE_SOURCE")
         print("Unesite neku od vrednosti iznad koje zelite da iscitate:")
         code = input()
-        print("Unesite od kog datuma zelite da iscitate")
-        odDatuma = input()
-        print("Unesite do kog datuma zelite da iscitate")
-        doDatuma = input()
-        pom = [code, odDatuma, doDatuma]
-        return pom
+        if code != "CODE_ANALOG" and code != "CODE_DIGITAL" and code != "CODE_CUS" \
+                "TOM" and code != "CODE_SINGLENODE" and code != "CODE_MULTIPLENO" \
+                "DE" and code != "CODE_CONSUMER" and code != "CODE_SOURCE" and code != "CODE_LIMITSET":
+            print(NevalidanUnos("Pogresan unos!Unesite neke od navedenih kodova"))
+            return None
+        else:
+            print("Unesite od kog datuma zelite da iscitate u formatu 'dan-mesec-godina sati:minuti:sekunde' ")
+            odDatuma = input()
+            print("Unesite do kog datuma zelite da iscitateu formatu 'dan-mesec-godina sati:minuti:sekunde' ")
+            doDatuma = input()
+            pom = [code, odDatuma, doDatuma]
+            return pom
 
 
 def Meni():

@@ -27,9 +27,13 @@ class MyTestCase(unittest.TestCase):
         with mock.patch('builtins.input', return_value="CODE_ANALOG"):
             assert main.iscitavanje_poslednje_vrednosti() == CODE.CODE_ANALOG.name
 
-    def test_po_vremenskom_intervalu(self):
-        with mock.patch('builtins.input', return_value=("CODE_ANALOG", "od", "do")):
-            assert main.iscitavanje_poslednje_vrednosti() == (CODE.CODE_ANALOG.name, "od", "do")
+    def test_po_vrednosti_error(self):
+        with mock.patch('builtins.input', return_value="SAD"):
+            assert main.iscitavanje_poslednje_vrednosti() is None
+
+    def test_po_vremenskom_intervalu_error(self):
+        with mock.patch('builtins.input', return_value="DANAS"):
+            assert main.iscitavanje_po_vr_intervalu() is None
 
 
 if __name__ == '__main__':
